@@ -22,4 +22,3 @@ async function runMigrations(): Promise<void> {
 }
 
 void runMigrations()
-

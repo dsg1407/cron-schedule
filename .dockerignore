@@ -1,0 +1,11 @@
+node_modules
+.git
+.github
+dist
+.nixpacks
+apps/api/dist
+apps/web/dist
+data
+*.db
+*.db-journal
+.DS_Store

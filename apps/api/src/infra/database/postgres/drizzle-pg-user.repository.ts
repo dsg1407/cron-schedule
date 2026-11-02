@@ -69,4 +69,3 @@ export class DrizzlePgUserRepository implements UserRepository {
     return user
   }
 }
-

@@ -88,4 +88,3 @@ export const executionLogs = pgTable(
     index('execution_logs_user_id_started_at_idx').on(table.userId, table.startedAt),
   ],
 )
-

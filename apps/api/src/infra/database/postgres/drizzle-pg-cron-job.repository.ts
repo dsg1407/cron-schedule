@@ -196,4 +196,3 @@ export class DrizzlePgCronJobRepository implements CronJobRepository {
     return true
   }
 }
-
