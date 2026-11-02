@@ -85,7 +85,7 @@ pnpm dev
 |---|---|---|
 | `VITE_API_URL` | `http://localhost:3333` | Base URL for the Fastify API. |
 | `VITE_DONATION_PIX_KEY` | `your-pix-key` | PIX key displayed in the donation dialog and `/docs` page. |
-| `VITE_DONATION_SPONSOR_URL` | `https://github.com/sponsors/danieldsg` | External sponsorship URL (GitHub Sponsors / Buy Me a Coffee). |
+| `VITE_DONATION_SPONSOR_URL` | `https://github.com/sponsors/dsg1407` | External sponsorship URL (GitHub Sponsors / Buy Me a Coffee). |
 
 ---
 
@@ -139,7 +139,7 @@ pnpm build
 
 **CronFlow** is an independent open-source project released under the MIT License. If it helps keep your team's scheduled jobs reliable, you can support its ongoing maintenance:
 
-- **GitHub Sponsors**: [https://github.com/sponsors/danieldsg](https://github.com/sponsors/danieldsg)
+- **GitHub Sponsors**: [https://github.com/sponsors/dsg1407](https://github.com/sponsors/dsg1407)
 - **In-app**: click **Apoiar o projeto** in the sidebar footer or visit `/docs` inside the application.
 
 ---
