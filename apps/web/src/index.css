@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-status-success-bg: var(--status-success-bg);
+  --color-status-success-dot: var(--status-success-dot);
+  --color-status-success-text: var(--status-success-text);
+  --color-status-danger-bg: var(--status-danger-bg);
+  --color-status-danger-dot: var(--status-danger-dot);
+  --color-status-danger-text: var(--status-danger-text);
+  --color-status-pending-bg: var(--status-pending-bg);
+  --color-status-pending-dot: var(--status-pending-dot);
+  --color-status-pending-text: var(--status-pending-text);
+  --color-status-info-bg: var(--status-info-bg);
+  --color-status-info-dot: var(--status-info-dot);
+  --color-status-info-text: var(--status-info-text);
+  --color-status-purple-bg: var(--status-purple-bg);
+  --color-status-purple-text: var(--status-purple-text);
+}
+
+:root {
+  color-scheme: light;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --foreground-subtle: #334155;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #eff6ff;
+  --accent-foreground: #1d4ed8;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #cbd5e1;
+  --ring: #2563eb;
+
+  --status-success-bg: #dcfce7;
+  --status-success-dot: #16a34a;
+  --status-success-text: #15803d;
+  --status-danger-bg: #fee2e2;
+  --status-danger-dot: #dc2626;
+  --status-danger-text: #b91c1c;
+  --status-pending-bg: #f1f5f9;
+  --status-pending-dot: #64748b;
+  --status-pending-text: #475569;
+  --status-info-bg: #dbeafe;
+  --status-info-dot: #2563eb;
+  --status-info-text: #1d4ed8;
+  --status-purple-bg: #f3e8ff;
+  --status-purple-text: #7e22ce;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #090d16;
+  --foreground: #f8fafc;
+  --foreground-subtle: #cbd5e1;
+  --surface: #111827;
+  --surface-raised: #1e293b;
+  --card: #111827;
+  --card-foreground: #f8fafc;
+  --popover: #1e293b;
+  --popover-foreground: #f8fafc;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #1e3a8a;
+  --accent-foreground: #93c5fd;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #1e293b;
+  --input: #334155;
+  --ring: #3b82f6;
+
+  --status-success-bg: rgba(22, 163, 74, 0.18);
+  --status-success-dot: #4ade80;
+  --status-success-text: #86efac;
+  --status-danger-bg: rgba(220, 38, 38, 0.2);
+  --status-danger-dot: #f87171;
+  --status-danger-text: #fca5a5;
+  --status-pending-bg: rgba(100, 116, 139, 0.22);
+  --status-pending-dot: #94a3b8;
+  --status-pending-text: #cbd5e1;
+  --status-info-bg: rgba(37, 99, 235, 0.2);
+  --status-info-dot: #60a5fa;
+  --status-info-text: #93c5fd;
+  --status-purple-bg: rgba(147, 51, 234, 0.2);
+  --status-purple-text: #d8b4fe;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  #root {
+    isolation: isolate;
+  }
+}

@@ -1,0 +1,30 @@
+import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUi from '@fastify/swagger-ui'
+import type { FastifyInstance } from 'fastify'
+import { jsonSchemaTransform } from 'fastify-type-provider-zod'
+
+export async function registerSwagger(app: FastifyInstance): Promise<void> {
+  await app.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: 'CronFlow API',
+        description: 'Gerenciador e Executor de Cron Jobs HTTP',
+        version: '1.0.0',
+      },
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+    },
+    transform: jsonSchemaTransform,
+  })
+
+  await app.register(fastifySwaggerUi, {
+    routePrefix: '/docs',
+  })
+}

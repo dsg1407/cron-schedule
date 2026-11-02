@@ -1,0 +1,33 @@
+{
+  "name": "cronflow",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Daniel S Goncalves <dsg1407@gmail.com>",
+  "packageManager": "pnpm@10.6.5",
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "dev:api": "pnpm --filter @cronflow/api dev",
+    "dev:web": "pnpm --filter @cronflow/web dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "test:unit": "pnpm --filter @cronflow/api test:unit",
+    "test:integration": "pnpm --filter @cronflow/api test:integration",
+    "test:web": "pnpm --filter @cronflow/web test",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "biome check apps",
+    "format": "biome check --write apps"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "typescript": "^5.8.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "better-sqlite3",
+      "esbuild",
+      "msw"
+    ]
+  }
+}
