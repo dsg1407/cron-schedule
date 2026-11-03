@@ -5,6 +5,9 @@
   "license": "MIT",
   "author": "Daniel S Goncalves <dsg1407@gmail.com>",
   "packageManager": "pnpm@10.6.5",
+  "engines": {
+    "node": "22.x || 24.x"
+  },
   "scripts": {
     "dev": "pnpm --parallel -r dev",
     "dev:api": "pnpm --filter @cronflow/api dev",
