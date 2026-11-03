@@ -35,4 +35,3 @@ describe('CronerSchedulerAdapter & Cron Syntax Validation', () => {
     expect(nextIso).toBeNull()
   })
 })
-

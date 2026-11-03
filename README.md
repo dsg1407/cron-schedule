@@ -8,6 +8,24 @@ HTTP scheduled task manager (CronJobs) with an in-process execution engine, expo
 
 ---
 
+## Screenshots
+
+### Dashboard (Dark Theme)
+![CronFlow Dashboard Dark Mode](docs/screenshots/dashboard-dark.png)
+
+<details>
+<summary>☀️ Click to preview Light Mode Dashboard</summary>
+
+![CronFlow Dashboard Light Mode](docs/screenshots/dashboard-light.png)
+</details>
+
+### Job Scheduling & Execution Inspection
+| Create & Configure Cron Job | Real-Time Execution Inspector |
+|:---:|:---:|
+| ![New CronJob Dialog](docs/screenshots/new-cronjob-dialog.png) | ![Execution Inspector](docs/screenshots/execution-inspector.png) |
+
+---
+
 ## Why CronFlow
 
 Shell scripts buried in a Linux server's `crontab` fail silently when a TLS certificate expires, a database query stalls, or an upstream API returns `HTTP 502`. By the time someone notices, a nightly settlement or data sync has been broken for days and the response body is gone.
