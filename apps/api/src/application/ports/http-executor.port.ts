@@ -20,6 +20,6 @@ export interface ExecuteHttpRequestOutput {
 }
 
 export interface HttpExecutorPort {
-  validateTargetUrl(url: string): void
+  validateTargetUrl(url: string): Promise<void> | void
   executeRequest(input: ExecuteHttpRequestInput): Promise<ExecuteHttpRequestOutput>
 }

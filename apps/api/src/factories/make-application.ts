@@ -35,6 +35,7 @@ import { CronerSchedulerAdapter } from '../infra/scheduler/croner-scheduler.adap
 export interface AppDependencies {
   databaseProvider: DatabaseProvider
   jwtSecret: string
+  corsOrigin: boolean | string | string[]
   userRepository: UserRepository
   cronJobRepository: CronJobRepository
   executionLogRepository: ExecutionLogRepository
@@ -167,6 +168,7 @@ export function makeApplication(env: Env): AppDependencies {
   return {
     databaseProvider: env.DATABASE_PROVIDER,
     jwtSecret: env.JWT_SECRET,
+    corsOrigin: env.CORS_ORIGIN,
     userRepository,
     cronJobRepository,
     executionLogRepository,

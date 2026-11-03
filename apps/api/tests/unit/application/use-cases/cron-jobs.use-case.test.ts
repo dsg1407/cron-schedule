@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { CreateCronJobUseCase } from '../../../../src/application/use-cases/create-cron-job.use-case.js'
+import {
+  CreateCronJobUseCase,
+  MAX_CRON_JOBS_PER_USER,
+} from '../../../../src/application/use-cases/create-cron-job.use-case.js'
 import { DeleteCronJobUseCase } from '../../../../src/application/use-cases/delete-cron-job.use-case.js'
 import { GetCronJobUseCase } from '../../../../src/application/use-cases/get-cron-job.use-case.js'
 import { ListCronJobsUseCase } from '../../../../src/application/use-cases/list-cron-jobs.use-case.js'
@@ -9,6 +12,7 @@ import {
   CronJobNotFoundError,
   ForbiddenTargetUrlError,
   InvalidCronExpressionError,
+  MaxCronJobsReachedError,
 } from '../../../../src/domain/errors.js'
 import { FakeHttpExecutor } from '../../../helpers/fake-http-executor.js'
 import { FakeScheduler } from '../../../helpers/fake-scheduler.js'
@@ -182,5 +186,44 @@ describe('CronJob Management Use Cases', () => {
     })
     expect(searchedList).toHaveLength(1)
     expect(searchedList[0]?.name).toBe('Backup Database')
+  })
+
+  it('enforces maximum cron jobs limit per user (MAX_CRON_JOBS_PER_USER = 50)', async () => {
+    // Populate repository with 50 jobs for user-limit
+    for (let i = 0; i < MAX_CRON_JOBS_PER_USER; i++) {
+      await cronJobRepository.create({
+        id: `job-${i}`,
+        userId: 'user-limit',
+        name: `Job ${i}`,
+        description: null,
+        icon: 'globe',
+        url: 'https://api.example.com/check',
+        method: 'GET',
+        headers: {},
+        body: null,
+        cronExpression: '0 0 * * *',
+        timezone: 'UTC',
+        timeoutMs: 30000,
+        maxRetries: 1,
+        status: 'active',
+        lastRunAt: null,
+        nextRunAt: null,
+        lastStatus: null,
+        lastDurationMs: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      })
+    }
+
+    // 51st job creation must fail with MaxCronJobsReachedError
+    await expect(
+      createCronJobUseCase.execute({
+        userId: 'user-limit',
+        name: 'Job 51',
+        url: 'https://api.example.com/overflow',
+        method: 'GET',
+        cronExpression: '0 0 * * *',
+      }),
+    ).rejects.toBeInstanceOf(MaxCronJobsReachedError)
   })
 })

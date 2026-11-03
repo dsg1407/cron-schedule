@@ -49,7 +49,7 @@ export class UpdateCronJobUseCase {
     }
 
     const updatedUrl = input.url !== undefined ? input.url.trim() : existingCronJob.url
-    this.httpExecutor.validateTargetUrl(updatedUrl)
+    await this.httpExecutor.validateTargetUrl(updatedUrl)
 
     const updatedCronExpression =
       input.cronExpression !== undefined

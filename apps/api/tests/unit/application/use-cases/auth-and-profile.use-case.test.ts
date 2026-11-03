@@ -99,4 +99,24 @@ describe('User Auth and Profile Use Cases', () => {
     })
     expect(profileUser.retentionDays).toBe(90)
   })
+
+  it('mitigates timing attacks by executing dummy password verification when user is not found', async () => {
+    let verifyCalled = false
+    let verifiedHash = ''
+    passwordHasher.verify = async (_plain, hash) => {
+      verifyCalled = true
+      verifiedHash = hash
+      return false
+    }
+
+    await expect(
+      authenticateUserUseCase.execute({
+        email: 'nonexistent@cronflow.dev',
+        password: 'any-password',
+      }),
+    ).rejects.toBeInstanceOf(InvalidCredentialsError)
+
+    expect(verifyCalled).toBe(true)
+    expect(verifiedHash).toContain(':')
+  })
 })

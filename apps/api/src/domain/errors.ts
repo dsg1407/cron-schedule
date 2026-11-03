@@ -62,3 +62,11 @@ export class ForbiddenTargetUrlError extends DomainError {
     super(`URL de serviço não permitida: ${reason}`)
   }
 }
+
+export class MaxCronJobsReachedError extends DomainError {
+  readonly statusCode = 400
+
+  constructor(readonly limit: number) {
+    super(`Limite máximo de ${limit} tarefas cron atingido para este usuário.`)
+  }
+}

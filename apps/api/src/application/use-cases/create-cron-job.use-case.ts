@@ -4,11 +4,13 @@ import type {
   CronJobStatus,
   HttpMethod,
 } from '../../domain/entities/cron-job.entity.js'
-import { InvalidCronExpressionError } from '../../domain/errors.js'
+import { InvalidCronExpressionError, MaxCronJobsReachedError } from '../../domain/errors.js'
 import { newId } from '../../domain/new-id.js'
 import type { CronJobRepository } from '../ports/cron-job.repository.js'
 import type { HttpExecutorPort } from '../ports/http-executor.port.js'
 import type { ScheduledJobCallback, SchedulerPort } from '../ports/scheduler.port.js'
+
+export const MAX_CRON_JOBS_PER_USER = 50
 
 export interface CreateCronJobUseCaseRequest {
   userId: string
@@ -39,10 +41,15 @@ export class CreateCronJobUseCase {
   ) {}
 
   async execute(input: CreateCronJobUseCaseRequest): Promise<CreateCronJobUseCaseResponse> {
+    const userJobCount = await this.cronJobRepository.countForUser(input.userId)
+    if (userJobCount >= MAX_CRON_JOBS_PER_USER) {
+      throw new MaxCronJobsReachedError(MAX_CRON_JOBS_PER_USER)
+    }
+
     const timezone = input.timezone ?? 'America/Sao_Paulo'
     const cronExpression = input.cronExpression.trim()
 
-    this.httpExecutor.validateTargetUrl(input.url)
+    await this.httpExecutor.validateTargetUrl(input.url)
 
     const isCronValid = this.scheduler.validateCronExpression(cronExpression, timezone)
     if (!isCronValid) {

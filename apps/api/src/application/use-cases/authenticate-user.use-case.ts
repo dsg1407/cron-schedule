@@ -12,6 +12,9 @@ export interface AuthenticateUserUseCaseResponse {
   user: User
 }
 
+const DUMMY_SCRYPT_HASH =
+  '00000000000000000000000000000000:00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+
 export class AuthenticateUserUseCase {
   constructor(
     private readonly userRepository: UserRepository,
@@ -26,6 +29,8 @@ export class AuthenticateUserUseCase {
     const user = await this.userRepository.findByEmail(normalizedEmail)
 
     if (!user) {
+      // Execute dummy scrypt verification to equalize execution time and prevent user enumeration
+      await this.passwordHasher.verify(password, DUMMY_SCRYPT_HASH)
       throw new InvalidCredentialsError()
     }
 

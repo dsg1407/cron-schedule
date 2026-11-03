@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { loadEnv } from '../../../src/config/env.js'
+import { DEFAULT_JWT_SECRET, loadEnv } from '../../../src/config/env.js'
 import { makeApplication } from '../../../src/factories/make-application.js'
 import { DrizzlePgCronJobRepository } from '../../../src/infra/database/postgres/drizzle-pg-cron-job.repository.js'
 import { DrizzlePgExecutionLogRepository } from '../../../src/infra/database/postgres/drizzle-pg-execution-log.repository.js'
@@ -14,6 +14,7 @@ describe('Environment & Database Provider Routing (SQLite in dev/test, PostgreSQ
     expect(devEnv.DATABASE_PROVIDER).toBe('sqlite')
     expect(devEnv.DATABASE_URL).toBe('./data/cronflow.db')
     expect(devEnv.ALLOW_PRIVATE_NETWORKS).toBe(true)
+    expect(devEnv.CORS_ORIGIN).toBe(true)
 
     const testEnv = loadEnv({ NODE_ENV: 'test', DATABASE_URL: ':memory:' })
     expect(testEnv.DATABASE_PROVIDER).toBe('sqlite')
@@ -24,19 +25,60 @@ describe('Environment & Database Provider Routing (SQLite in dev/test, PostgreSQ
     const prodEnv = loadEnv({
       NODE_ENV: 'production',
       DATABASE_URL: 'postgresql://user:pass@db.example.com:5432/cronflow_prod',
-      JWT_SECRET: 'super-secret-production-key',
+      JWT_SECRET: 'super-secret-production-key-at-least-32-chars-long',
     })
 
     expect(prodEnv.DATABASE_PROVIDER).toBe('postgres')
     expect(prodEnv.DATABASE_URL).toBe('postgresql://user:pass@db.example.com:5432/cronflow_prod')
     expect(prodEnv.ALLOW_PRIVATE_NETWORKS).toBe(false)
+    expect(prodEnv.CORS_ORIGIN).toBe(false)
 
     expect(() =>
       loadEnv({
         NODE_ENV: 'production',
         DATABASE_URL: './data/cronflow.db',
+        JWT_SECRET: 'super-secret-production-key-at-least-32-chars-long',
       }),
     ).toThrow(/PostgreSQL/i)
+  })
+
+  it('enforces strong non-default JWT_SECRET in production', () => {
+    expect(() =>
+      loadEnv({
+        NODE_ENV: 'production',
+        DATABASE_URL: 'postgresql://user:pass@db.example.com:5432/cronflow_prod',
+        JWT_SECRET: DEFAULT_JWT_SECRET,
+      }),
+    ).toThrow(/JWT_SECRET: Em ambiente production/i)
+
+    expect(() =>
+      loadEnv({
+        NODE_ENV: 'production',
+        DATABASE_URL: 'postgresql://user:pass@db.example.com:5432/cronflow_prod',
+        JWT_SECRET: 'short-key',
+      }),
+    ).toThrow(/JWT_SECRET: Em ambiente production, JWT_SECRET deve conter no mínimo 32 caracteres/i)
+  })
+
+  it('parses custom CORS_ORIGIN configurations correctly', () => {
+    const singleOriginEnv = loadEnv({
+      NODE_ENV: 'production',
+      DATABASE_URL: 'postgresql://user:pass@db.example.com:5432/cronflow_prod',
+      JWT_SECRET: 'super-secret-production-key-at-least-32-chars-long',
+      CORS_ORIGIN: 'https://app.cronflow.dev',
+    })
+    expect(singleOriginEnv.CORS_ORIGIN).toBe('https://app.cronflow.dev')
+
+    const multipleOriginsEnv = loadEnv({
+      NODE_ENV: 'production',
+      DATABASE_URL: 'postgresql://user:pass@db.example.com:5432/cronflow_prod',
+      JWT_SECRET: 'super-secret-production-key-at-least-32-chars-long',
+      CORS_ORIGIN: 'https://app.cronflow.dev, https://admin.cronflow.dev',
+    })
+    expect(multipleOriginsEnv.CORS_ORIGIN).toEqual([
+      'https://app.cronflow.dev',
+      'https://admin.cronflow.dev',
+    ])
   })
 
   it('wires SQLite repositories in test/dev and PostgreSQL repositories in production', () => {
@@ -57,6 +99,7 @@ describe('Environment & Database Provider Routing (SQLite in dev/test, PostgreSQ
       loadEnv({
         NODE_ENV: 'production',
         DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/cronflow',
+        JWT_SECRET: 'super-secret-production-key-at-least-32-chars-long',
       }),
     )
 

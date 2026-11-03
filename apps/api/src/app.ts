@@ -1,3 +1,4 @@
+import fastifyRateLimit from '@fastify/rate-limit'
 import Fastify, { type FastifyInstance } from 'fastify'
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
 import type { AppDependencies } from './factories/make-application.js'
@@ -15,6 +16,8 @@ import { registerProfileRoutes } from './http/routes/profile.routes.js'
 
 export interface BuildAppOptions {
   logger?: boolean
+  disableRateLimit?: boolean
+  trustProxy?: boolean | string | string[]
 }
 
 export async function buildApp(
@@ -23,12 +26,28 @@ export async function buildApp(
 ): Promise<FastifyInstance> {
   const app = Fastify({
     logger: options.logger ?? false,
+    trustProxy: options.trustProxy ?? true,
   })
 
   app.setValidatorCompiler(validatorCompiler)
   app.setSerializerCompiler(serializerCompiler)
 
-  await registerCors(app)
+  if (!options.disableRateLimit) {
+    await app.register(fastifyRateLimit, {
+      global: true,
+      max: 120,
+      timeWindow: '1 minute',
+      errorResponseBuilder: (request, context) => ({
+        status: 429,
+        error: 'Too Many Requests',
+        message: `Muitas requisições. Tente novamente em ${context.after}.`,
+        timestamp: new Date().toISOString(),
+        path: request.url,
+      }),
+    })
+  }
+
+  await registerCors(app, dependencies.corsOrigin)
   await registerJwt(app, dependencies.jwtSecret)
   await registerSwagger(app)
   registerErrorHandlers(app)

@@ -42,6 +42,7 @@ describe('CronFlow HTTP API + SQLite Integration', () => {
       DATABASE_URL: ':memory:',
       JWT_SECRET: 'integration-test-jwt-secret-key',
       ALLOW_PRIVATE_NETWORKS: true,
+      CORS_ORIGIN: true,
     })
 
     app = await buildApp(application, { logger: false })

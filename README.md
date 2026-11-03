@@ -76,8 +76,9 @@ pnpm dev
 | `PORT` | `3333` | Fastify HTTP server port. |
 | `HOST` | `0.0.0.0` | Server bind address. |
 | `DATABASE_URL` | `./data/cronflow.db` (dev/test) / `postgresql://...` (prod) | SQLite file path in `development`/`test`, or a `postgresql://` connection string in `production`. |
-| `JWT_SECRET` | `cronflow-super-secret-jwt-key-2026` | Secret key used to sign and verify JWT tokens. |
-| `ALLOW_PRIVATE_NETWORKS` | `true` in dev / `false` in prod | Allows or blocks webhook calls to `localhost` and private IP ranges (`10.x`, `172.16-31.x`, `192.168.x`). |
+| `JWT_SECRET` | `cronflow-super-secret-jwt-key-2026` | Secret key used to sign and verify JWT tokens (must be >= 32 chars and non-default in production). |
+| `ALLOW_PRIVATE_NETWORKS` | `true` in dev / `false` in prod | Allows or blocks webhook calls to `localhost` and private IP ranges (`10.x`, `172.16-31.x`, `192.168.x`, `169.254.x`). |
+| `CORS_ORIGIN` | `true` in dev / `false` in prod | Allowed CORS origin (`true`, `false`, single URL, or comma-separated URLs). |
 
 ### Frontend (`apps/web`)
 

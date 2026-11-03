@@ -24,6 +24,12 @@ export async function registerAuthRoutes(
   typedApp.post(
     '/api/auth/register',
     {
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: '1 minute',
+        },
+      },
       schema: {
         tags: ['auth'],
         body: registerUserBodySchema,
@@ -50,6 +56,12 @@ export async function registerAuthRoutes(
   typedApp.post(
     '/api/auth/login',
     {
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: '1 minute',
+        },
+      },
       schema: {
         tags: ['auth'],
         body: authenticateUserBodySchema,

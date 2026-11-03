@@ -8,7 +8,8 @@ export class CronerSchedulerAdapter implements SchedulerPort {
   validateCronExpression(cronExpression: string, timezone: string): boolean {
     const trimmed = cronExpression.trim()
     const parts = trimmed.split(/\s+/)
-    if (parts.length < 5 || parts.length > 6) {
+    // Enforce strict 5-field standard POSIX cron (disallow 6-field sub-minute second-level cron)
+    if (parts.length !== 5) {
       return false
     }
 
@@ -23,8 +24,14 @@ export class CronerSchedulerAdapter implements SchedulerPort {
   }
 
   getNextRunIso(cronExpression: string, timezone: string): string | null {
+    const trimmed = cronExpression.trim()
+    const parts = trimmed.split(/\s+/)
+    if (parts.length !== 5) {
+      return null
+    }
+
     try {
-      const probeJob = new Cron(cronExpression.trim(), { timezone, paused: true })
+      const probeJob = new Cron(trimmed, { timezone, paused: true })
       const nextDate = probeJob.nextRun()
       probeJob.stop()
       return nextDate ? nextDate.toISOString() : null
@@ -40,8 +47,14 @@ export class CronerSchedulerAdapter implements SchedulerPort {
       return
     }
 
+    const trimmed = cronJob.cronExpression.trim()
+    const parts = trimmed.split(/\s+/)
+    if (parts.length !== 5) {
+      return
+    }
+
     const cronInstance = new Cron(
-      cronJob.cronExpression,
+      trimmed,
       {
         timezone: cronJob.timezone,
         protect: true,
